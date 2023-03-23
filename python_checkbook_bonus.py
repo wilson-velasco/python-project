@@ -1,9 +1,18 @@
+# With Transaction History functionality
+
 import os
 import json
+import datetime as d
 
 def save_data():
     with open('total_balance.txt','w') as f:
         json.dump(total_balance,f)
+    now_date = d.datetime.now().strftime("%m/%d/%Y")
+    now_time = d.datetime.now().strftime("%H:%M:%S")
+    dollar_amount = "${:,.2f}".format(amount_input)
+    dollar_total = "${:,.2f}".format(total_balance)
+    with open('transaction_history.txt','a') as f:
+        f.write('\n'"{: <20}{: <20}{: <20}{: <20}{: <20}".format((now_date),(now_time),(dollar_amount),(trans_category),(dollar_total)))
 
 if os.path.exists('total_balance.txt') == True:
     with open('total_balance.txt') as f:
@@ -41,11 +50,12 @@ while True:
     1) View current balance
     2) Record a debit (withdraw)
     3) Record a credit (deposit)
-    4) Exit
+    4) View Transaction History
+    5) Exit
     ''')
-    user_input = input('Please enter a value (1-4): ')
+    user_input = input('Please enter a value (1-5): ')
 
-    if user_input not in list('1234'):
+    if user_input not in list('12345'):
         print('\nThat is not a valid selection.')
         continue
 
@@ -59,6 +69,7 @@ while True:
                 print('That is not a valid input.')
                 continue
             else:
+                trans_category = 'Debit'
                 amount_input = float(amount_input)
                 total_balance = record_debit(amount_input)
                 save_data()
@@ -72,11 +83,19 @@ while True:
                 print('That is not a valid input.')
                 continue
             else:
+                trans_category = 'Credit'
                 amount_input = float(amount_input)
                 total_balance = record_credit(amount_input)
                 save_data()
                 print(f'\n\t\tGreat! Your current balance is now: ${view_balance()}\n')
                 break
-                
-    elif user_input == '4': # exit
+    
+    elif user_input == '4': # view transaction history
+        f = open('transaction_history.txt', 'r')
+        file_contents = f.read()
+        print()
+        print(file_contents)
+        print()
+
+    elif user_input == '5': # exit
         exit_program()
