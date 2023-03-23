@@ -31,7 +31,6 @@ def record_credit(x):
     return total_balance + x
 
 def exit_program():
-    save_data()
     print('\nThanks, have a great day!\n')
     quit()
 
