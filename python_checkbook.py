@@ -1,9 +1,16 @@
 import os
 import json
+import datetime as d
 
 def save_data():
     with open('total_balance.txt','w') as f:
         json.dump(total_balance,f)
+    now_date = d.datetime.now().strftime("%m/%d/%Y")
+    now_time = d.datetime.now().strftime("%H:%M:%S")
+    dollar_amount = "${:,.2f}".format(amount_input)
+    dollar_total = "${:,.2f}".format(total_balance)
+    with open('transaction_history.txt','a') as f:
+        f.write('\n'"{: <20}{: <20}{: <20}{: <20}{: <20}".format((now_date),(now_time),(dollar_amount),(trans_category),(dollar_total)))
 
 if os.path.exists('total_balance.txt') == True:
     with open('total_balance.txt') as f:
@@ -22,7 +29,6 @@ def record_credit(x):
     return total_balance + x
 
 def exit_program():
-    save_data()
     print('\nThanks, have a great day!\n')
     quit()
 
@@ -59,6 +65,7 @@ while True:
                 print('That is not a valid input.')
                 continue
             else:
+                trans_category = 'Debit'
                 amount_input = float(amount_input)
                 total_balance = record_debit(amount_input)
                 save_data()
@@ -72,6 +79,7 @@ while True:
                 print('That is not a valid input.')
                 continue
             else:
+                trans_category = 'Credit'
                 amount_input = float(amount_input)
                 total_balance = record_credit(amount_input)
                 save_data()
